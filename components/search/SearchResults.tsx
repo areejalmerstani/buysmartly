@@ -1,83 +1,76 @@
-"use client";
+﻿"use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
 import { ProductCard } from "./ProductCard";
 import { SearchSkeleton } from "./SearchSkeleton";
-import { PackageSearch } from "lucide-react";
-import type { SearchResponse } from "@/types";
+import { AlertCircle, PackageSearch, Search } from "lucide-react";
+import type { SearchQuery } from "@/features/search/domain/search";
+import { useProductSearch } from "@/features/search/presentation/use-product-search";
 
 interface SearchResultsProps {
-    params: {
-        q?: string;
-        retailer?: string;
-        minPrice?: string;
-        maxPrice?: string;
-        sortBy?: string;
-        page?: string;
-    };
+  query: SearchQuery;
 }
 
-export function SearchResults({ params }: SearchResultsProps) {
-    const { q, retailer, minPrice, maxPrice, sortBy, page } = params;
+export function SearchResults({ query }: SearchResultsProps) {
+  const { data, isLoading, isError } = useProductSearch(query);
 
-    const { data, isLoading, isError } = useQuery<SearchResponse>({
-                                                                      queryKey: ["search", q, retailer, minPrice, maxPrice, sortBy, page],
-                                                                      queryFn: async () => {
-                                                                          const res = await api.search({
-                                                                                                           q,
-                                                                                                           retailer,
-                                                                                                           minPrice,
-                                                                                                           maxPrice,
-                                                                                                           sortBy,
-                                                                                                           page: page ?? 1,
-                                                                                                       });
-                                                                          return res.data;
-                                                                      },
-                                                                      enabled: !!q,
-                                                                  });
-
-    if (!q) {
-        return (
-            <div className="flex flex-col items-center justify-center py-24 gap-4 text-muted-foreground">
-                <PackageSearch className="h-12 w-12" />
-                <p className="text-lg font-medium">Enter a search term to get started</p>
-                <p className="text-sm">Try searching for a product name, brand, or category</p>
-            </div>
-        );
-    }
-
-    if (isLoading) return <SearchSkeleton />;
-
-    if (isError) {
-        return (
-            <div className="flex flex-col items-center justify-center py-24 gap-3 text-muted-foreground">
-                <p className="text-lg font-medium">Something went wrong</p>
-                <p className="text-sm">Could not fetch results. Please try again.</p>
-            </div>
-        );
-    }
-
-    if (!data?.results?.length) {
-        return (
-            <div className="flex flex-col items-center justify-center py-24 gap-3 text-muted-foreground">
-                <PackageSearch className="h-12 w-12" />
-                <p className="text-lg font-medium">No results found for "{q}"</p>
-                <p className="text-sm">Try different keywords or remove some filters</p>
-            </div>
-        );
-    }
-
+  if (!query.q) {
     return (
-        <div className="flex flex-col gap-4">
-            <p className="text-sm text-muted-foreground">
-                {data.total.toLocaleString()} results found
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                {data.results.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
-            </div>
+      <div className="rounded-lg border bg-card px-6 py-20 text-center shadow-sm">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-md bg-primary/10 text-primary">
+          <Search className="h-7 w-7" />
         </div>
+        <p className="text-lg font-semibold">Enter a search term to get started</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Try searching for a product name, brand, or category.
+        </p>
+      </div>
     );
+  }
+
+  if (isLoading) return <SearchSkeleton />;
+
+  if (isError) {
+    return (
+      <div className="rounded-lg border bg-card px-6 py-20 text-center shadow-sm">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-md bg-destructive/10 text-destructive">
+          <AlertCircle className="h-7 w-7" />
+        </div>
+        <p className="text-lg font-semibold">Something went wrong</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Could not fetch results. Please try again.
+        </p>
+      </div>
+    );
+  }
+
+  if (!data?.results?.length) {
+    return (
+      <div className="rounded-lg border bg-card px-6 py-20 text-center shadow-sm">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-md bg-muted text-muted-foreground">
+          <PackageSearch className="h-7 w-7" />
+        </div>
+        <p className="text-lg font-semibold">No results found for "{query.q}"</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Try different keywords or remove some filters.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-3 rounded-lg border bg-card px-4 py-3 shadow-sm">
+        <p className="text-sm text-muted-foreground">
+          <span className="font-semibold text-foreground">{data.total.toLocaleString()}</span>{" "}
+          results found
+        </p>
+        <p className="hidden text-xs text-muted-foreground sm:block">Sorted by relevance</p>
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        {data.results.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </div>
+  );
 }
