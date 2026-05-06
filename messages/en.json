@@ -1,0 +1,63 @@
+{
+  "common": {
+    "search": "Search",
+    "searchPlaceholder": "Search products across all retailers...",
+    "buyNow": "Buy Now",
+    "addToWishlist": "Add to Wishlist",
+    "removeFromWishlist": "Remove from Wishlist",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "noResults": "No results found",
+    "tryAgain": "Try again",
+    "results": "results found",
+    "reset": "Reset",
+    "applyFilters": "Apply filters"
+  },
+  "nav": {
+    "home": "Home",
+    "wishlist": "Wishlist",
+    "profile": "Profile",
+    "deals": "Deals",
+    "admin": "Admin"
+  },
+  "home": {
+    "hero": "Compare prices across every major retailer",
+    "heroSub": "Search once. See results from Amazon, eBay, Noon, AliExpress, and Walmart side by side.",
+    "searchesAcross": "Searches across:",
+    "trySearching": "Try \"iPhone 15\" or \"Nike Air Max\"",
+    "features": {
+      "searchEverywhere": "Search everywhere",
+      "searchEverywhereDesc": "One search across 5 major retailers instantly",
+      "bestPrice": "Best price guaranteed",
+      "bestPriceDesc": "We rank results by price so you never overpay",
+      "realTime": "Real-time results",
+      "realTimeDesc": "Live prices fetched directly from each retailer",
+      "safe": "Safe affiliate links",
+      "safeDesc": "Every link is verified and tracks your purchase"
+    }
+  },
+  "search": {
+    "resultsFor": "Results for",
+    "searchResults": "Search results",
+    "comparingPrices": "Comparing prices across Amazon, eBay, Noon, AliExpress, and Walmart",
+    "enterTerm": "Enter a search term to get started",
+    "enterTermSub": "Try searching for a product name, brand, or category",
+    "noResultsFor": "No results found for",
+    "noResultsSub": "Try different keywords or remove some filters"
+  },
+  "filters": {
+    "sortBy": "Sort by",
+    "retailer": "Retailer",
+    "priceRange": "Price range",
+    "mostRelevant": "Most relevant",
+    "priceLowHigh": "Price: low to high",
+    "priceHighLow": "Price: high to low",
+    "highestRated": "Highest rated"
+  },
+  "product": {
+    "deliveredBy": "Delivered by",
+    "reviews": "reviews",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "common": {
+    "search": "بحث",
+    "searchPlaceholder": "ابحث عن المنتجات عبر جميع المتاجر...",
+    "buyNow": "اشتري الآن",
+    "addToWishlist": "أضف إلى المفضلة",
+    "removeFromWishlist": "إزالة من المفضلة",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ ما",
+    "noResults": "لا توجد نتائج",
+    "tryAgain": "حاول مجدداً",
+    "results": "نتيجة",
+    "reset": "إعادة تعيين",
+    "applyFilters": "تطبيق الفلاتر"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "wishlist": "المفضلة",
+    "profile": "الملف الشخصي",
+    "deals": "العروض",
+    "admin": "الإدارة"
+  },
+  "home": {
+    "hero": "قارن الأسعار عبر كبرى المتاجر",
+    "heroSub": "ابحث مرة واحدة. شاهد النتائج من أمازون وإيباي ونون وعلي إكسبريس وولمارت جنباً إلى جنب.",
+    "searchesAcross": "يبحث عبر:",
+    "trySearching": "جرب \"آيفون 15\" أو \"نايك اير ماكس\"",
+    "features": {
+      "searchEverywhere": "ابحث في كل مكان",
+      "searchEverywhereDesc": "بحث واحد عبر 5 متاجر كبرى فورياً",
+      "bestPrice": "أفضل سعر مضمون",
+      "bestPriceDesc": "نرتب النتائج حسب السعر حتى لا تدفع أكثر",
+      "realTime": "نتائج فورية",
+      "realTimeDesc": "أسعار مباشرة مجلوبة من كل متجر",
+      "safe": "روابط تابعة آمنة",
+      "safeDesc": "كل رابط موثق ويتتبع عملية الشراء"
+    }
+  },
+  "search": {
+    "resultsFor": "نتائج البحث عن",
+    "searchResults": "نتائج البحث",
+    "comparingPrices": "مقارنة الأسعار عبر أمازون وإيباي ونون وعلي إكسبريس وولمارت",
+    "enterTerm": "أدخل كلمة بحث للبدء",
+    "enterTermSub": "جرب البحث باسم منتج أو علامة تجارية أو فئة",
+    "noResultsFor": "لا توجد نتائج لـ",
+    "noResultsSub": "جرب كلمات مختلفة أو أزل بعض الفلاتر"
+  },
+  "filters": {
+    "sortBy": "ترتيب حسب",
+    "retailer": "المتجر",
+    "priceRange": "نطاق السعر",
+    "mostRelevant": "الأكثر صلة",
+    "priceLowHigh": "السعر: من الأقل إلى الأعلى",
+    "priceHighLow": "السعر: من الأعلى إلى الأقل",
+    "highestRated": "الأعلى تقييماً"
+  },
+  "product": {
+    "deliveredBy": "يُسلَّم بحلول",
+    "reviews": "تقييم",
+    "inStock": "متوفر",
+    "outOfStock": "غير متوفر"
+  }
+}

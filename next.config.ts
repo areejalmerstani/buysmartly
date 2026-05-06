@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
-    // React Compiler — stable in Next.js 16, reduces re-renders automatically
-    reactCompiler: true,
-
     images: {
         remotePatterns: [
             { protocol: "https", hostname: "**.amazon.com" },
@@ -13,11 +13,9 @@ const nextConfig: NextConfig = {
             { protocol: "https", hostname: "**.walmartimages.com" },
         ],
     },
-
-    // Typed routes — catches broken <Link href> at build time
     experimental: {
         typedRoutes: true,
     },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
