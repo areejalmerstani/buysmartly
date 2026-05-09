@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState } from "react";
-import { Search, Heart, ShoppingBag, Languages } from "lucide-react";
+import { Search, Heart, Languages } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useTranslations, useLocale } from "next-intl";
@@ -36,12 +36,14 @@ export function Navbar() {
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-4 sm:px-6 lg:px-8">
         <Link
           href={`/${locale}` as Route}
-          className="flex shrink-0 items-center gap-2 rounded-md pr-2 text-lg font-semibold"
+          className="flex shrink-0 items-center rounded-md pr-2"
+          aria-label="BuySmartly home"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-md shadow-primary/20">
-            <ShoppingBag className="h-5 w-5" />
-          </span>
-          <span className="hidden sm:inline">BuySmartly</span>
+          <img
+            src="/nobg_logo.png"
+            alt="BuySmartly"
+            className="block h-9 w-auto max-w-[150px] object-contain sm:h-22 drop-shadow-sm"
+          />
         </Link>
 
         <form

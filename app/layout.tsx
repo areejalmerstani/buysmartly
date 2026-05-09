@@ -1,3 +1,4 @@
+﻿import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Geist, Geist_Mono, Cairo } from "next/font/google";
 import { Providers } from "../components/providers";
@@ -17,6 +18,14 @@ const cairo = Cairo({
   subsets: ["arabic"],
   variable: "--font-cairo",
 });
+
+export const metadata: Metadata = {
+  title: "BuySmartly",
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
