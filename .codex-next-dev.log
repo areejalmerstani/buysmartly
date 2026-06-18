@@ -1,6 +1,25 @@
+
+> buysmartly@0.1.0 dev
+> next dev
+
 ▲ Next.js 16.2.4 (Turbopack)
-- Local:         http://127.0.0.1:3005
-- Network:       http://127.0.0.1:3005
+- Local:         http://localhost:3000
+- Network:       http://192.168.70.113:3000
 - Environments: .env.local
-✓ Ready in 601ms
-[?25h
+✓ Ready in 17.9s
+Creating turbopack project {
+  dir: 'C:\\Users\\areej\\OneDrive\\Desktop\\Projects\\nextjs\\buysmartly',
+  testMode: true
+}
+- Experiments (use with caution):
+  ✓ typedRoutes
+
+ GET /en 404 in 940ms (next.js: 408ms, proxy.ts: 24ms, application-code: 508ms)
+ GET /ar 404 in 99ms (next.js: 21ms, proxy.ts: 12ms, application-code: 66ms)
+ GET /en 404 in 102ms (next.js: 52ms, proxy.ts: 14ms, application-code: 35ms)
+ GET /en/login 404 in 397ms (next.js: 131ms, proxy.ts: 62ms, application-code: 203ms)
+ GET /en/search 404 in 420ms (next.js: 252ms, proxy.ts: 67ms, application-code: 101ms)
+ GET /en 404 in 196ms (next.js: 36ms, proxy.ts: 45ms, application-code: 115ms)
+ GET /en 200 in 1702ms (next.js: 1280ms, proxy.ts: 63ms, application-code: 360ms)
+ HEAD /en 200 in 145ms (next.js: 27ms, proxy.ts: 5ms, application-code: 113ms)
+ GET /en 200 in 310ms (next.js: 55ms, proxy.ts: 13ms, application-code: 242ms)

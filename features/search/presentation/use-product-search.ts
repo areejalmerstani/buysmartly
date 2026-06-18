@@ -5,10 +5,14 @@ import { searchProducts } from "../application/search-products";
 import type { SearchQuery, SearchResponse } from "../domain/search";
 import { mockSearchRepository } from "../infrastructure/mock-search-repository";
 
-export function useProductSearch(query: SearchQuery) {
+interface UseProductSearchOptions {
+  enabled?: boolean;
+}
+
+export function useProductSearch(query: SearchQuery, options?: UseProductSearchOptions) {
   return useQuery<SearchResponse>({
     queryKey: ["search", query],
     queryFn: () => searchProducts(mockSearchRepository, query),
-    enabled: query.q.length > 0,
+    enabled: options?.enabled ?? query.q.length > 0,
   });
 }

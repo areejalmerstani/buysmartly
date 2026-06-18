@@ -1,4 +1,4 @@
-﻿{
+{
   "products": [
     {
       "id": "sony-wh1000xm5-amazon",
@@ -18,7 +18,14 @@
       "deliveryEstimate": "Tomorrow, free delivery",
       "inStock": true,
       "category": "audio",
-      "availability": "in_stock"
+      "availability": "in_stock",
+      "coupon": {
+        "badge": "10% OFF",
+        "code": "SMART10",
+        "description": "Apply SMART10 at checkout for 10% off eligible headphone orders.",
+        "expiresAt": "2026-12-31T23:59:59Z",
+        "isActive": true
+      }
     },
     {
       "id": "sony-wh1000xm5-ebay",
@@ -58,7 +65,13 @@
       "deliveryEstimate": "Tomorrow by noon",
       "inStock": true,
       "category": "laptops",
-      "availability": "in_stock"
+      "availability": "in_stock",
+      "coupon": {
+        "badge": "Coupon Available",
+        "description": "Limited-time Noon savings are applied on eligible checkout pages.",
+        "expiresAt": "2026-09-30T23:59:59Z",
+        "isActive": true
+      }
     },
     {
       "id": "macbook-air-m3-amazon",
@@ -118,7 +131,14 @@
       "deliveryEstimate": "Pickup today",
       "inStock": true,
       "category": "tablets",
-      "availability": "in_stock"
+      "availability": "in_stock",
+      "coupon": {
+        "badge": "$25 OFF",
+        "code": "PICKUP25",
+        "description": "Use PICKUP25 for extra savings on eligible pickup orders.",
+        "expiresAt": "2026-10-15T23:59:59Z",
+        "isActive": true
+      }
     },
     {
       "id": "galaxy-watch-noon",
@@ -158,7 +178,14 @@
       "deliveryEstimate": "4 days delivery",
       "inStock": true,
       "category": "wearables",
-      "availability": "in_stock"
+      "availability": "in_stock",
+      "coupon": {
+        "badge": "Coupon Available",
+        "code": "WATCHDEAL",
+        "description": "Seller coupon for select Galaxy Watch listings while inventory lasts.",
+        "expiresAt": "2025-12-31T23:59:59Z",
+        "isActive": true
+      }
     },
     {
       "id": "logitech-mx-master-amazon",
@@ -178,7 +205,14 @@
       "deliveryEstimate": "Tomorrow morning",
       "inStock": true,
       "category": "accessories",
-      "availability": "in_stock"
+      "availability": "in_stock",
+      "coupon": {
+        "badge": "15% OFF",
+        "code": "CLICK15",
+        "description": "Clip the coupon before checkout to save 15% on this accessory.",
+        "expiresAt": "2026-11-20T23:59:59Z",
+        "isActive": true
+      }
     },
     {
       "id": "logitech-mx-master-walmart",

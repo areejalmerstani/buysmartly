@@ -1,152 +1,250 @@
-﻿"use client";
+"use client";
 
-import Image from "next/image";
-import { useState } from "react";
-import { ArrowRight, Search, Shield, Sparkles, TrendingDown, Zap } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { startTransition, useDeferredValue, useState } from "react";
+import { PackageSearch, Search, SlidersHorizontal, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-import { useSearchNavigation } from "@/features/search/presentation/use-search-navigation";
+import { Input } from "@/components/ui/input";
+import { ProductCard } from "@/components/search/ProductCard";
+import { SearchSkeleton } from "@/components/search/SearchSkeleton";
+import { RETAILERS, type SearchQuery, type SearchRetailer } from "@/features/search/domain/search";
+import { useProductSearch } from "@/features/search/presentation/use-product-search";
+import { cn } from "@/lib/utils";
 
-const RETAILERS = ["Amazon", "eBay", "Noon", "AliExpress", "Walmart"];
+const FEATURED_SEARCHES = ["headphones", "laptop", "watch", "tablet"];
+
+const RETAILER_ACCENTS: Record<SearchRetailer, string> = {
+  amazon: "bg-orange-500",
+  ebay: "bg-blue-500",
+  noon: "bg-yellow-400",
+  aliexpress: "bg-red-500",
+  walmart: "bg-cyan-500",
+};
 
 export default function HomePage() {
-  const t = useTranslations();
-  const { submitSearch } = useSearchNavigation();
-  const [query, setQuery] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeRetailer, setActiveRetailer] = useState<SearchRetailer | "all">("all");
+  const deferredSearchTerm = useDeferredValue(searchTerm.trim());
 
-  function handleSearch(e: React.FormEvent) {
-    e.preventDefault();
-    submitSearch(query);
+  const query: SearchQuery = {
+    q: deferredSearchTerm,
+    retailer: activeRetailer === "all" ? [] : [activeRetailer],
+    sortBy: "relevance",
+    page: 1,
+  };
+
+  const { data, isLoading, isError, isFetching } = useProductSearch(query, { enabled: true });
+  const products = data?.results ?? [];
+  const productTotal = data?.total ?? products.length;
+  const hasSearch = searchTerm.trim().length > 0;
+  const activeRetailerLabel =
+    activeRetailer === "all"
+      ? "All marketplaces"
+      : (RETAILERS.find((retailer) => retailer.id === activeRetailer)?.label ?? "Selected marketplace");
+
+  function updateRetailer(retailer: SearchRetailer | "all") {
+    startTransition(() => {
+      setActiveRetailer(retailer);
+    });
   }
 
-  const features = [
-    {
-      icon: Search,
-      title: t("home.features.searchEverywhere"),
-      desc: t("home.features.searchEverywhereDesc"),
-    },
-    {
-      icon: TrendingDown,
-      title: t("home.features.bestPrice"),
-      desc: t("home.features.bestPriceDesc"),
-    },
-    {
-      icon: Zap,
-      title: t("home.features.realTime"),
-      desc: t("home.features.realTimeDesc"),
-    },
-    {
-      icon: Shield,
-      title: t("home.features.safe"),
-      desc: t("home.features.safeDesc"),
-    },
-  ];
+  function useFeaturedSearch(term: string) {
+    startTransition(() => {
+      setSearchTerm(term);
+      setActiveRetailer("all");
+    });
+  }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[radial-gradient(circle_at_top,oklch(0.63_0.21_28/0.08),transparent_34%),linear-gradient(180deg,oklch(1_0_0/0.55),transparent_26%)]">
-      <section className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:px-8 lg:py-16">
-        <div className="flex min-h-[520px] flex-col gap-7">
-          {/* <div className="inline-flex w-fit items-center gap-2 rounded-md border bg-card px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm">
-            <Sparkles className="h-3.5 w-3.5 text-primary" />
-            Live marketplace comparison
-          </div> */}
-
-{/*           <Image
-            src="/hero.png"
-            alt="BuySmartly"
-            width={420}
-            height={140}
-            className="h-40 w-auto drop-shadow-sm sm:h-80"
-            priority
-          /> */}
-
-          <div className="space-y-5">
-            <h1 className="max-w-3xl text-4xl font-semibold leading-tight tracking-normal text-foreground sm:text-5xl lg:text-6xl">
-              {t("home.hero")}
-            </h1>
-            <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-              {t("home.heroSub")}
-            </p>
-          </div>
-
-          <form
-            onSubmit={handleSearch}
-            className="flex w-full max-w-2xl flex-col gap-3 rounded-lg border bg-card p-2 shadow-lg sm:flex-row"
-          >
-            <div className="relative min-w-0 flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={t("home.trySearching")}
-                className="h-12 border-transparent bg-muted/60 pl-9 text-base shadow-none focus-visible:bg-background"
-              />
+    <div className="min-h-[calc(100vh-4rem)] bg-[linear-gradient(180deg,oklch(0.985_0.003_75),oklch(0.96_0.01_75)_38%,oklch(0.985_0.003_75))]">
+      <section className="border-b border-border/70 bg-background/75">
+        <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(380px,0.55fr)] lg:px-8 lg:py-10">
+          <div className="flex flex-col justify-center gap-6">
+            <div className="inline-flex w-fit items-center gap-2 rounded-md border border-border/80 bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
+              Live marketplace comparison
             </div>
-            <Button type="submit" size="lg" className="h-12 px-5 sm:px-6">
-              {t("common.search")}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </form>
 
-          <div className="flex max-w-2xl flex-wrap items-center gap-2">
-            <span className="mr-1 text-sm text-muted-foreground">{t("home.searchesAcross")}</span>
-            {RETAILERS.map((name) => (
-              <span
-                key={name}
-                className="rounded-md border bg-background px-3 py-1 text-sm font-medium text-foreground shadow-sm"
-              >
-                {name}
-              </span>
-            ))}
-          </div>
+            <div className="space-y-4">
+              <h1 className="max-w-4xl text-3xl font-semibold leading-tight tracking-normal text-foreground sm:text-5xl">
+                Search once. Compare the best product offers instantly.
+              </h1>
+              <p className="max-w-2xl text-base leading-7 text-muted-foreground">
+                Browse Amazon, Noon, eBay, AliExpress, and Walmart from one responsive dashboard
+                built for quick scanning and confident buying.
+              </p>
+            </div>
 
-        </div>
-
-        <div className="grid content-center gap-3 lg:min-h-[520px]">
-          <div className="rounded-lg border bg-card p-4 shadow-lg">
-            <div className="mb-4 flex items-center justify-between border-b pb-3">
-              <div>
-                <p className="text-sm font-medium">Price snapshot</p>
-                <p className="text-xs text-muted-foreground">Same product, cleaner decisions</p>
+            <form
+              className="flex w-full max-w-3xl flex-col gap-3 rounded-lg border border-border/80 bg-card p-2 shadow-lg shadow-foreground/5 sm:flex-row"
+              onSubmit={(event) => event.preventDefault()}
+            >
+              <div className="relative min-w-0 flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder='Search for "headphones", "laptop", or "watch"'
+                  className="h-12 rounded-md border-transparent bg-muted/60 pl-9 pr-10 text-base shadow-none transition-colors focus-visible:bg-background"
+                  aria-label="Search products"
+                />
+                {hasSearch ? (
+                  <button
+                    type="button"
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+                    aria-label="Clear search"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                ) : null}
               </div>
-              <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">
-                -18%
-              </span>
-            </div>
-            <div className="space-y-3">
-              {["Amazon", "Noon", "eBay"].map((name, index) => (
-                <div
-                  key={name}
-                  className="flex items-center justify-between rounded-md bg-muted/50 p-3"
+              <Button type="submit" size="lg" className="h-12 gap-2 px-5 shadow-sm shadow-primary/25">
+                <Search className="h-4 w-4" />
+                Search
+              </Button>
+            </form>
+
+            <div className="flex max-w-3xl flex-wrap items-center gap-2">
+              <span className="text-sm text-muted-foreground">Popular searches</span>
+              {FEATURED_SEARCHES.map((term) => (
+                <button
+                  key={term}
+                  type="button"
+                  onClick={() => useFeaturedSearch(term)}
+                  className="rounded-md border border-border/80 bg-background px-3 py-1.5 text-sm font-medium capitalize text-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-md bg-background text-sm font-semibold shadow-sm">
-                      {name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">{name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {index === 0 ? "Fast delivery" : "Verified offer"}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-sm font-semibold tabular-nums">${[849, 879, 912][index]}</p>
-                </div>
+                  {term}
+                </button>
               ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            {features.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="rounded-lg border bg-card p-4 shadow-sm">
-                <Icon className="mb-3 h-5 w-5 text-primary" />
-                <h3 className="text-sm font-semibold leading-snug">{title}</h3>
-                <p className="mt-1 text-xs leading-5 text-muted-foreground">{desc}</p>
+          <aside className="grid content-center gap-3 rounded-lg border border-border/80 bg-card p-4 shadow-xl shadow-foreground/[0.06]">
+            <div className="flex items-center justify-between border-b border-border/70 pb-3">
+              <div>
+                <p className="text-sm font-semibold">Marketplace snapshot</p>
+                <p className="text-xs text-muted-foreground">Fast filters for cleaner decisions</p>
               </div>
-            ))}
+              <div className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">
+                Live
+              </div>
+            </div>
+            <div className="grid gap-2">
+              {RETAILERS.slice(0, 4).map((retailer, index) => (
+                <button
+                  key={retailer.id}
+                  type="button"
+                  onClick={() => updateRetailer(retailer.id)}
+                  className="flex items-center justify-between rounded-md border border-transparent bg-muted/50 p-3 text-left transition-all hover:border-border hover:bg-background"
+                >
+                  <span className="flex items-center gap-3">
+                    <span
+                      className={cn("h-9 w-1.5 rounded-full", RETAILER_ACCENTS[retailer.id])}
+                    />
+                    <span>
+                      <span className="block text-sm font-medium">{retailer.label}</span>
+                      <span className="block text-xs text-muted-foreground">
+                        {index === 0 ? "Fast delivery focus" : "Verified marketplace offers"}
+                      </span>
+                    </span>
+                  </span>
+                  <span className="text-sm font-semibold tabular-nums">{index + 3} deals</span>
+                </button>
+              ))}
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 rounded-md bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+              <SlidersHorizontal className="h-3.5 w-3.5" />
+              Product results
+            </div>
+            <div>
+              <h2 className="text-2xl font-semibold tracking-normal sm:text-3xl">
+                {hasSearch ? `Results for "${deferredSearchTerm}"` : "Browse all products"}
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                {activeRetailerLabel} sorted by relevance, rating, and available offers.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-border/80 bg-card p-1 shadow-sm">
+            <div className="flex max-w-full gap-1 overflow-x-auto">
+              <button
+                type="button"
+                onClick={() => updateRetailer("all")}
+                className={cn(
+                  "inline-flex h-10 shrink-0 items-center gap-2 rounded-md px-3 text-sm font-medium transition-all",
+                  activeRetailer === "all"
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                All
+              </button>
+              {RETAILERS.map((retailer) => (
+                <button
+                  key={retailer.id}
+                  type="button"
+                  onClick={() => updateRetailer(retailer.id)}
+                  className={cn(
+                    "inline-flex h-10 shrink-0 items-center gap-2 rounded-md px-3 text-sm font-medium transition-all",
+                    activeRetailer === retailer.id
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <span className={cn("h-2 w-2 rounded-full", RETAILER_ACCENTS[retailer.id])} />
+                  {retailer.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
+
+        {isError ? (
+          <div className="rounded-lg border border-border/80 bg-card px-6 py-16 text-center shadow-sm">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-md bg-destructive/10 text-destructive">
+              <PackageSearch className="h-7 w-7" />
+            </div>
+            <p className="text-lg font-semibold">Could not load products</p>
+            <p className="mt-1 text-sm text-muted-foreground">Please refresh and try again.</p>
+          </div>
+        ) : isLoading ? (
+          <SearchSkeleton />
+        ) : products.length ? (
+          <div className="space-y-4">
+            <div className="flex flex-col gap-2 rounded-lg border border-border/80 bg-card px-4 py-3 text-sm shadow-sm sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-muted-foreground">
+                <span className="font-semibold text-foreground">{productTotal.toLocaleString()}</span>{" "}
+                products found
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {isFetching ? "Refreshing offers..." : "Updated from marketplace fixtures"}
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-lg border border-border/80 bg-card px-6 py-16 text-center shadow-sm">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-md bg-muted text-muted-foreground">
+              <PackageSearch className="h-7 w-7" />
+            </div>
+            <p className="text-lg font-semibold">No products found</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Try a different product name or switch back to all marketplaces.
+            </p>
+          </div>
+        )}
       </section>
     </div>
   );

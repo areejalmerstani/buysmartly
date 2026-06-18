@@ -18,6 +18,15 @@ export interface Product {
     inStock: boolean;
     category: string;
     availability: "in_stock" | "out_of_stock"
+    coupon?: ProductCoupon;
+}
+
+export interface ProductCoupon {
+    badge: string;
+    code?: string;
+    description?: string;
+    expiresAt?: string;
+    isActive?: boolean;
 }
 
 

@@ -1,6 +1,6 @@
 ﻿import Image from "next/image";
 import Link from "next/link";
-import { Star, Truck, ExternalLink, BadgeCheck } from "lucide-react";
+import { Star, Truck, ExternalLink, BadgeCheck, Info, TicketPercent } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const productHref = `/product/${product.id}` as Route;
+  const coupon = getValidCoupon(product);
 
   return (
     <Card className="group overflow-hidden rounded-lg border border-border/80 bg-card/95 p-0 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-foreground/10">
@@ -76,6 +77,41 @@ export function ProductCard({ product }: ProductCardProps) {
           <span className="truncate">{product.deliveryEstimate}</span>
         </div>
 
+        {coupon ? (
+          <div className="group/coupon relative rounded-md border border-primary/20 bg-primary/5 px-3 py-2.5">
+            <div className="flex items-start gap-2.5">
+              <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-background text-primary shadow-sm ring-1 ring-primary/15">
+                <TicketPercent className="h-4 w-4" />
+              </div>
+              <div className="min-w-0 flex-1 space-y-1">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <Badge className="h-5 rounded-md bg-primary text-[0.7rem] font-semibold text-primary-foreground">
+                    {coupon.badge}
+                  </Badge>
+                  {coupon.code ? (
+                    <span className="rounded-md border border-dashed border-primary/35 bg-background px-2 py-0.5 font-mono text-[0.7rem] font-semibold text-primary">
+                      {coupon.code}
+                    </span>
+                  ) : null}
+                </div>
+                <p className="line-clamp-2 text-xs leading-5 text-muted-foreground">
+                  {coupon.description ?? "Coupon available at checkout."}
+                </p>
+              </div>
+              <span
+                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors group-hover/coupon:bg-background group-hover/coupon:text-foreground"
+                title={coupon.description ?? "Coupon available at checkout."}
+                aria-label={coupon.description ?? "Coupon available at checkout."}
+              >
+                <Info className="h-3.5 w-3.5" />
+              </span>
+            </div>
+            <div className="pointer-events-none absolute bottom-full right-3 z-10 mb-2 hidden max-w-56 rounded-md border border-border/80 bg-popover px-3 py-2 text-xs leading-5 text-popover-foreground shadow-lg group-hover/coupon:block">
+              {coupon.description ?? "Apply this offer where available before checkout."}
+            </div>
+          </div>
+        ) : null}
+
         <div className="mt-auto flex items-end justify-between gap-3 border-t border-border/70 pt-3">
           <div>
             <p className="text-xs text-muted-foreground">Best offer</p>
@@ -93,4 +129,16 @@ export function ProductCard({ product }: ProductCardProps) {
       </CardContent>
     </Card>
   );
+}
+
+function getValidCoupon(product: Product): Product["coupon"] | undefined {
+  const coupon = product.coupon;
+  if (!coupon || coupon.isActive === false) return undefined;
+  if (!coupon.badge.trim()) return undefined;
+  if (!coupon.expiresAt) return coupon;
+
+  const expiresAt = new Date(coupon.expiresAt);
+  if (Number.isNaN(expiresAt.getTime())) return undefined;
+
+  return expiresAt.getTime() >= Date.now() ? coupon : undefined;
 }
